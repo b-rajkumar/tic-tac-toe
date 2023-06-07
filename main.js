@@ -1,5 +1,5 @@
 const { Board } = require("./src/board");
-const { TicTacToe, renderer, hasWon } = require("./src/tic-tac-toe");
+const { TicTacToe, read } = require("./src/tic-tac-toe");
 
 const main = () => {
   const board = new Board({ rows: 3, columns: 3 });
@@ -15,9 +15,12 @@ const main = () => {
   const players = [
     { name: 'raj', symbol: 'X' },
     { name: 'rishabh', symbol: 'O' }
-  ]
+  ];
 
-  const ticTacToe = new TicTacToe(players, board, hasWon, renderer);
+  const io = { read, write: console.log };
+
+  const ticTacToe = new TicTacToe(players, board, io, console.log);
+
   ticTacToe.run();
 };
 

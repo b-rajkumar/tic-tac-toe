@@ -4,7 +4,7 @@ const { Board } = require('../src/board');
 
 describe('board', () => {
   describe('getElements', () => {
-    it('should return an empty board of size 3 x 3', () => {
+    it('should return an empty Board of size 3 x 3', () => {
       const board = new Board({ rows: 3, columns: 3 });
 
       const expected = [
@@ -18,11 +18,11 @@ describe('board', () => {
     });
   });
 
-  describe('place', () => {
+  describe('update', () => {
     it('should place an element in a given position', () => {
       const board = new Board({ rows: 3, columns: 3 });
-      const position = { row: 0, column: 2 };
-      board.place('X', position);
+
+      board.update('X', 3);
 
       const expected = [
         [' ', ' ', 'X'],
@@ -34,10 +34,8 @@ describe('board', () => {
       deepStrictEqual(actual, expected);
     });
 
-    it('should not place anything outside the board', () => {
+    it('should not place anything outside the Board', () => {
       const board = new Board({ rows: 3, columns: 3 });
-      const location = { row: 2, column: 5 };
-      board.place('X', location);
 
       const expected = [
         [' ', ' ', ' '],
@@ -52,18 +50,34 @@ describe('board', () => {
     it('should place given symbols at respective positions', () => {
       const board = new Board({ rows: 3, columns: 3 });
 
-      let position = { row: 2, column: 2 };
-      board.place('X', position);
+      board.update('X', 2);
 
-      position = { row: 0, column: 1 };
-      board.place('X', position);
+      board.update('X', 9);
 
-      position = { row: 1, column: 0 };
-      board.place('O', position);
+      board.update('O', 4);
 
       const expected = [
         [' ', 'X', ' '],
         ['O', ' ', ' '],
+        [' ', ' ', 'X']
+      ];
+      const actual = board.getElements();
+
+      deepStrictEqual(actual, expected);
+    });
+
+    it('should not place a symbol on the filled position on the board', () => {
+      const board = new Board({ rows: 3, columns: 3 });
+
+      board.update('X', 2);
+
+      board.update('X', 9);
+
+      board.update('O', 2);
+
+      const expected = [
+        [' ', 'X', ' '],
+        [' ', ' ', ' '],
         [' ', ' ', 'X']
       ];
       const actual = board.getElements();

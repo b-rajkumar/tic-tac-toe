@@ -1,29 +1,34 @@
 class Board {
-  #dimensions
   #board
-  constructor({ rows, columns }) {
-    this.#dimensions = { rows, columns };
-    this.#board = this.#createBoard();
-  }
+  constructor(dimensions) {
+    this.#board = this.#createBoard(dimensions);
+  };
 
-  #createBoard() {
-    const { rows, columns } = this.#dimensions;
+  #createBoard(dimensions) {
+    const { rows, columns } = dimensions;
     return new Array(rows).fill().map(() => {
       return new Array(columns).fill(' ');
     });
-  }
+  };
 
-  place(element, { row, column }) {
-    const { rows, columns } = this.#dimensions;
-    if(rows > row && columns > column) {
-      this.#board[row][column] = element;
+  update(symbol, position) {
+    if(position > 0 && position < 10) {
+
+      const row = Math.floor((position - 1) / 3);
+      const column = (position + 2) % 3;
+
+      if(this.#board[row][column] !== ' ') return false;
+
+      this.#board[row][column] = symbol;
+      return true;
     }
-  }
+
+    return false;
+  };
 
   getElements() {
     return JSON.parse(JSON.stringify(this.#board));
-  }
-
+  };
 }
 
 exports.Board = Board;

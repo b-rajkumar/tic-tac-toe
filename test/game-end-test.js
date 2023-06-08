@@ -1,6 +1,6 @@
 const { describe, it } = require('node:test');
 const { ok } = require('assert');
-const { isGameOver } = require('../src/tic-tac-toe');
+const { isGameOver } = require('../src/game-end');
 
 describe('isGameOver', () => {
   it('should return true when row have same symbol', () => {

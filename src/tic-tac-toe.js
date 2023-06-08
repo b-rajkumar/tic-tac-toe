@@ -5,27 +5,35 @@ class TicTacToe {
   #player
   #players
   #renderer
+  #isGameOver
   #playerNumber
 
-  constructor(players, board, io, renderer) {
+  constructor(players, board, io, isGameOver, renderer) {
     this.#board = board;
     this.#read = io.read;
     this.#write = io.write;
     this.#players = players;
     this.#renderer = renderer;
+    this.#isGameOver = isGameOver;
     this.#playerNumber = 0;
   }
 
   run() {
+    const symbol = this.#player.symbol;
+    const board = this.#board.getElements();
     this.#player = this.#players[this.#playerNumber];
     this.#write(`${this.#player.name} enter position: `);
     this.#read((key) => this.#gameLoop(key));
+    if(this.#isGameOver(symbol, board)) {
+      this.#renderer(`${this.#player.name} WON !!`);
+      process.exit();
+    }
   }
 
   #gameLoop(position) {
     const status = this.#board.update(this.#player.symbol, position);
 
-    if (status) {
+    if(status) {
       this.#renderer(this.#board.getElements());
       this.#playerNumber = (this.#playerNumber + 1) % 2;
     }
@@ -34,39 +42,9 @@ class TicTacToe {
   }
 };
 
-const isGameOver = (symbol, board) => {
-  if ((board[0][0] === symbol) && (board[0][2] === symbol) && (board[0][1] === symbol)) return true;
-  if ((board[1][0] === symbol) && (board[1][1] === symbol) && (board[1][2] === symbol)) return true;
-  if ((board[2][0] === symbol) && (board[2][1] === symbol) && (board[2][2] === symbol)) return true;
-
-  if ((board[0][0] === symbol) && (board[1][0] === symbol) && (board[2][0] === symbol)) return true;
-  if ((board[0][1] === symbol) && (board[1][1] === symbol) && (board[2][1] === symbol)) return true;
-  if ((board[0][2] === symbol) && (board[1][2] === symbol) && (board[2][2] === symbol)) return true;
-
-  if ((board[0][0] === symbol) && (board[1][1] === symbol) && (board[2][2] === symbol)) return true;
-  if ((board[0][2] === symbol) && (board[1][1] === symbol) && (board[2][0] === symbol)) return true;
-
-  return false;
-};
-
-
 const read = (onData) => {
   process.stdin.once('data', onData);
 };
 
 exports.read = read;
-
-const transpose = (matrix) => {
-  return matrix.reduce((matrixTranspose, row) => {
-    row.forEach((element, index) => {
-      const newRow = matrixTranspose[index] || [];
-      newRow.push(element);
-
-      matrixTranspose[index] = newRow;
-    });
-    return matrixTranspose;
-  }, []);
-};
-
-exports.isGameOver = isGameOver;
 exports.TicTacToe = TicTacToe;

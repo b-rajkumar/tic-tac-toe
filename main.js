@@ -1,4 +1,5 @@
 const { Board } = require("./src/board");
+const { isGameOver } = require("./src/game-end");
 const { TicTacToe, read } = require("./src/tic-tac-toe");
 
 const main = () => {
@@ -19,7 +20,7 @@ const main = () => {
 
   const io = { read, write: console.log };
 
-  const ticTacToe = new TicTacToe(players, board, io, console.log);
+  const ticTacToe = new TicTacToe(players, board, io, isGameOver, console.log);
 
   ticTacToe.run();
 };

@@ -1,49 +1,33 @@
 class Board {
   #board
 
-  constructor(dimensions) {
-    this.#board = this.#createBoard(dimensions);
+  constructor() {
+    this.#board = new Array(9).fill(' ');
   };
 
-  #createBoard(dimensions) {
-    const { rows, columns } = dimensions;
-    return new Array(rows).fill().map(() => {
-      return new Array(columns).fill(' ');
-    });
-  };
-
-  #isPosVacant(row, column) {
-    return this.#board[row][column] === ' ';
-  }
-
-  #getCoordinate(position) {
-    const row = Math.floor((position - 1) / 3);
-    const column = (position + 2) % 3;
-
-    return { row, column };
-  }
-
-  #isValidMove(position, row, column) {
+  #isValidPos(position) {
     const isPosValid = position > 0 && position < 10;
-    if(!isPosValid) return false;
+    const isPosVacant = this.#board[position] === ' ';
 
-    return this.#isPosVacant(row, column);
+    return isPosVacant && isPosValid;
   }
 
-  update(symbol, position) {
-    const { row, column } = this.#getCoordinate(position);
-
-    if(this.#isValidMove(position, row, column)) {
-      this.#board[row][column] = symbol;
-
+  update(symbol, place) {
+    const position = place - 1
+    if(this.#isValidPos(position)) {
+      this.#board[position] = symbol;
       return true;
     }
 
     return false;
   }
 
+  getPositionsOf(symbol) {
+    return this.#board.filter((element) => element === symbol);
+  }
+
   getElements() {
-    return JSON.parse(JSON.stringify(this.#board));
+    return this.#board.slice();
   };
 }
 

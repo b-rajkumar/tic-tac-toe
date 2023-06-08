@@ -7,11 +7,7 @@ describe('board', () => {
     it('should return an empty Board of size 3 x 3', () => {
       const board = new Board({ rows: 3, columns: 3 });
 
-      const expected = [
-        [' ', ' ', ' '],
-        [' ', ' ', ' '],
-        [' ', ' ', ' ']
-      ];
+      const expected = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '];
       const actual = board.getElements();
 
       deepStrictEqual(actual, expected);
@@ -24,11 +20,7 @@ describe('board', () => {
 
       board.update('X', 3);
 
-      const expected = [
-        [' ', ' ', 'X'],
-        [' ', ' ', ' '],
-        [' ', ' ', ' ']
-      ];
+      const expected = [' ', ' ', 'X', ' ', ' ', ' ', ' ', ' ', ' '];
       const actual = board.getElements();
 
       deepStrictEqual(actual, expected);
@@ -37,11 +29,7 @@ describe('board', () => {
     it('should not place anything outside the Board', () => {
       const board = new Board({ rows: 3, columns: 3 });
 
-      const expected = [
-        [' ', ' ', ' '],
-        [' ', ' ', ' '],
-        [' ', ' ', ' ']
-      ];
+      const expected = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '];
       const actual = board.getElements();
 
       deepStrictEqual(actual, expected);
@@ -56,11 +44,7 @@ describe('board', () => {
 
       board.update('O', 4);
 
-      const expected = [
-        [' ', 'X', ' '],
-        ['O', ' ', ' '],
-        [' ', ' ', 'X']
-      ];
+      const expected = [' ', 'X', ' ', 'O', ' ', ' ', ' ', ' ', 'X'];
       const actual = board.getElements();
 
       deepStrictEqual(actual, expected);
@@ -75,11 +59,7 @@ describe('board', () => {
 
       board.update('O', 2);
 
-      const expected = [
-        [' ', 'X', ' '],
-        [' ', ' ', ' '],
-        [' ', ' ', 'X']
-      ];
+      const expected = [' ', 'X', ' ', ' ', ' ', ' ', ' ', ' ', 'X'];
       const actual = board.getElements();
 
       deepStrictEqual(actual, expected);

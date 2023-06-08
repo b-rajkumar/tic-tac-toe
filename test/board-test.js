@@ -54,9 +54,7 @@ describe('board', () => {
       const board = new Board();
 
       board.update('X', 1);
-
       board.update('X', 8);
-
       board.update('O', 1);
 
       const expected = [' ', 'X', ' ', ' ', ' ', ' ', ' ', ' ', 'X'];
@@ -64,5 +62,20 @@ describe('board', () => {
 
       deepStrictEqual(actual, expected);
     });
-  })
+  });
+
+  describe('getPositions', () => {
+    it('should filter all the positions of given symbol', () => {
+      const board = new Board();
+
+      board.update('X', 1);
+      board.update('X', 8);
+      board.update('O', 1);
+
+      const positions = board.getPositions("X");
+
+      deepStrictEqual(positions, [1, 8]);
+    });
+
+  });
 });

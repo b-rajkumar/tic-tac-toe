@@ -3,10 +3,10 @@ class Board {
 
   constructor() {
     this.#board = new Array(9).fill(' ');
-  };
+  }
 
   #isValidPos(position) {
-    const isPosValid = position > 0 && position < 10;
+    const isPosValid = position >= 0 && position < 9;
     const isPosVacant = this.#board[position] === ' ';
 
     return isPosVacant && isPosValid;
@@ -21,13 +21,17 @@ class Board {
     return false;
   }
 
-  getPositionsOf(symbol) {
-    return this.#board.filter((element) => element === symbol);
+  getPositions(symbol) {
+    return this.#board.reduce((positions, element, index) => {
+      if(element === symbol) positions.push(index);
+
+      return positions;
+    }, []);
   }
 
   getElements() {
     return this.#board.slice();
-  };
-}
+  }
+};
 
 exports.Board = Board;

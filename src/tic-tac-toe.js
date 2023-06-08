@@ -1,44 +1,58 @@
 class TicTacToe {
+  #io
+  #turn
+  #onEnd
   #board
-  #read
-  #write
   #player
   #players
   #renderer
   #isGameOver
   #playerNumber
 
-  constructor(players, board, io, isGameOver, renderer) {
+  constructor({ players, board, io, isGameOver, renderer, onEnd }) {
+    this.#turn = 0;
+    this.#playerNumber = 0;
+    this.#io = io;
+    this.#onEnd = onEnd;
     this.#board = board;
-    this.#read = io.read;
-    this.#write = io.write;
     this.#players = players;
     this.#renderer = renderer;
     this.#isGameOver = isGameOver;
-    this.#playerNumber = 0;
   }
 
   run() {
-    const symbol = this.#player.symbol;
-    const board = this.#board.getElements();
     this.#player = this.#players[this.#playerNumber];
-    this.#write(`${this.#player.name} enter position: `);
-    this.#read((key) => this.#gameLoop(key));
-    if(this.#isGameOver(symbol, board)) {
-      this.#renderer(`${this.#player.name} WON !!`);
-      process.exit();
-    }
+    this.#io.write(`\n${this.#player.name} enter position: `);
+    this.#io.read((key) => this.#gameLoop(key));
   }
 
   #gameLoop(position) {
-    const status = this.#board.update(this.#player.symbol, position);
+    const status = this.#board.update(this.#player.symbol, position - 1);
 
     if(status) {
       this.#renderer(this.#board.getElements());
-      this.#playerNumber = (this.#playerNumber + 1) % 2;
+      this.#playerNumber = (++this.#turn) % 2;
+
+      this.#hasWon(this.#player)
+      this.#isDraw();
     }
 
     this.run();
+  }
+
+  #hasWon(player) {
+    const positions = this.#board.getPositions(this.#player.symbol);
+    if(this.#isGameOver(positions)) {
+      this.#io.write(`${player.name} WON !!!`);
+      this.#onEnd();
+    }
+  }
+
+  #isDraw() {
+    if(this.#turn === 9) {
+      this.#io.write(`DRAW !`);
+      this.#onEnd();
+    }
   }
 };
 

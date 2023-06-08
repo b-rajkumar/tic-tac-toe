@@ -12,8 +12,7 @@ class Board {
     return isPosVacant && isPosValid;
   }
 
-  update(symbol, place) {
-    const position = place - 1
+  update(symbol, position) {
     if(this.#isValidPos(position)) {
       this.#board[position] = symbol;
       return true;

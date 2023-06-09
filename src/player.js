@@ -25,4 +25,22 @@ class Player {
   }
 };
 
+class Participants {
+  #players
+  #playerId
+  constructor(players) {
+    this.#players = players;
+    this.#playerId = 0;
+  }
+
+  switch() {
+    this.#playerId = this.#playerId ? 0 : 1;
+  }
+
+  getPlayer() {
+    return this.#players[this.#playerId];
+  }
+};
+
 exports.Player = Player;
+exports.Participants = Participants;

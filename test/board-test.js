@@ -1,5 +1,5 @@
 const { describe, it } = require('node:test');
-const { deepStrictEqual } = require('assert');
+const { deepStrictEqual, ok } = require('assert');
 const { Board } = require('../src/board');
 
 describe('board', () => {
@@ -39,9 +39,7 @@ describe('board', () => {
       const board = new Board();
 
       board.update('X', 1);
-
       board.update('X', 8);
-
       board.update('O', 3);
 
       const expected = [' ', 'X', ' ', 'O', ' ', ' ', ' ', ' ', 'X'];
@@ -64,18 +62,41 @@ describe('board', () => {
     });
   });
 
-  describe('getPositions', () => {
-    it('should filter all the positions of given symbol', () => {
+  describe('isGameOver', () => {
+    it('should return true when row have same symbol', () => {
       const board = new Board();
+      board.update("X", 0);
+      board.update("X", 1);
+      board.update("X", 2);
 
-      board.update('X', 1);
-      board.update('X', 8);
-      board.update('O', 1);
-
-      const positions = board.getPositions("X");
-
-      deepStrictEqual(positions, [1, 8]);
+      ok(board.isGameOver("X"));
     });
 
+    it('should return true when column have same symbol', () => {
+      const board = new Board();
+      board.update("X", 0);
+      board.update("X", 3);
+      board.update("X", 6);
+
+      ok(board.isGameOver("X"));
+    });
+
+    it('should return true when diagonal have same symbol', () => {
+      const board = new Board();
+      board.update("X", 0);
+      board.update("X", 4);
+      board.update("X", 8);
+
+      ok(board.isGameOver("X"));
+    });
+
+    it('should return false when the board has no winning combination', () => {
+      const board = new Board();
+      board.update("X", 0);
+      board.update("X", 3);
+      board.update("X", 8);
+
+      ok(!board.isGameOver("X"));
+    });
   });
 });

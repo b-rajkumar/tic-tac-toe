@@ -1,7 +1,7 @@
 const colors = require("colors/safe")
 const { Board } = require("./src/board");
 const { Player, Participants } = require("./src/player");
-const { renderer } = require("./src/renderer");
+const { Renderer } = require("./src/renderer");
 const { TicTacToe, read } = require("./src/tic-tac-toe");
 
 const setupStdin = () => {
@@ -22,16 +22,14 @@ const onEnd = () => {
 const main = () => {
   setupStdin();
   const board = new Board();
-  const io = { read, write: (data) => process.stdout.write(data) };
-
   const player1 = new Player('rishabh', colors.red('X'));
   const player2 = new Player('debu', colors.green('O'));
   const participants = new Participants([player1, player2]);
-
+  const renderer = new Renderer(participants);
   const ticTacToe = new TicTacToe({
     participants,
     board,
-    io,
+    read,
     renderer,
     onEnd
   });

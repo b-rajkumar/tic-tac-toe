@@ -1,45 +1,59 @@
 const { table } = require("table");
-const { chunk } = require("../lib/chunk");
 
 class Renderer {
-  #participants
-  #startingRow
-  #startingColumn
+  #window
 
-  constructor(participants) {
-    this.#participants = participants;
+  render({ moves, currentPlayer, winner, isGameOver }) {
+    const [columns, rows] = process.stdout.getWindowSize();
+    this.#window = new Array(rows).fill(0).map(() => new Array(columns).fill(' '));
+
+    const board = this.#generateTable(moves);
+    const x = Math.round((columns - board.split('\n')[0].length) / 2);
+    const y = Math.round((rows - board.split('\n').length) / 2);
+
+    this.#writeToWindow([x, y], board);
+    const message = (isGameOver) ? (winner) ? `${winner} won!` : 'Tied' : `${currentPlayer} enter position: `;
+    this.#writeToWindow([0, rows - 1], message);
+
+    this.#displayWindow();
+  };
+
+  #writeToWindow([x, y], text) {
+    let column = x;
+    let row = y;
+    text.split('').forEach(char => {
+      if(char === '\n') {
+        row++;
+        column = x;
+        return;
+      }
+      this.#window[row][column] = char;
+      column++;
+    });
   }
 
-  display(boardElements) {
-    const board = table(chunk(boardElements, 3));
-    const [columns, rows] = process.stdout.getWindowSize();
-    const boardSide = board.split("\n")[0].length;
+  #generateTable(moves) {
+    const board = [[], [], []];
+    for(let i = 0; i < 9; i += 1) {
+      const row = Math.floor(i / 3);
+      const column = i % 3;
 
+      board[row][column] = moves[i] || ' ';
+    }
+    return table(board);
+  }
+
+  #displayWindow() {
     process.stdout.cursorTo(0, 0);
     process.stdout.clearScreenDown();
-
-    this.#startingColumn = Math.round((columns - boardSide) / 2);
-    this.#startingRow = Math.round(rows / 5);
-    this.log([this.#startingColumn, this.#startingRow], board);
+    console.log(this.#window.map(row => row.join('')).join('\n'));
   }
 
-  log([column, row], data) {
-    const lines = data.split('\n');
-    lines.forEach((line) => {
-      this.#logLine([column, row], line);
-      row++;
-    })
-  }
-
-  #logLine([column, row], line) {
-    process.stdout.cursorTo(column, row);
-    process.stdout.write(line);
-  }
-
-  write(line) {
-    const row = Math.round(this.#startingRow * 3);
-    const column = Math.round((process.stdout.columns - line.length) / 2);
-    this.#logLine([column, row], line);
+  write(text) {
+    const stdout = process.stdout;
+    stdout.cursorTo(0, stdout.columns);
+    stdout.clearLine();
+    stdout.write(text);
   }
 };
 

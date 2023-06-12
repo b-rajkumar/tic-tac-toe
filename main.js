@@ -1,40 +1,32 @@
-const colors = require("colors/safe")
-const { Board } = require("./src/board");
-const { Player, Participants } = require("./src/player");
+const { GameController } = require("./src/gameController");
+const { keyboardController } = require("./src/keyboardController");
+const { Player, Players } = require("./src/player");
 const { Renderer } = require("./src/renderer");
-const { TicTacToe, read } = require("./src/tic-tac-toe");
+const { TicTacToe } = require("./src/tic-tac-toe");
 
-const setupStdin = () => {
-  const { stdin } = process;
-
-  stdin.setRawMode(true);
-  stdin.setEncoding("utf-8");
-  stdin.on("data", (key) => {
-    if(key === '\u0003') process.exit();
-  });
-};
-
-const onEnd = () => {
-  process.stdout.write("GAME OVER");
-  process.exit(0);
+const keyMapping = {
+  'q': 0,
+  'w': 1,
+  'e': 2,
+  'a': 3,
+  's': 4,
+  'd': 5,
+  'z': 6,
+  'x': 7,
+  'c': 8
 };
 
 const main = () => {
-  setupStdin();
-  const board = new Board();
-  const player1 = new Player('rishabh', colors.red('X'));
-  const player2 = new Player('debu', colors.green('O'));
-  const participants = new Participants([player1, player2]);
-  const renderer = new Renderer(participants);
-  const ticTacToe = new TicTacToe({
-    participants,
-    board,
-    read,
-    renderer,
-    onEnd
-  });
+  const player1 = new Player('manjeet', 'X');
+  const player2 = new Player('raj', 'O');
+  const players = new Players(player1, player2);
 
-  ticTacToe.run();
+  const ticTacToe = new TicTacToe(players);
+  const inputController = new keyboardController(keyMapping);
+  const renderer = new Renderer();
+  const gc = new GameController(ticTacToe, inputController, renderer);
+
+  gc.start();
 };
 
 main();
